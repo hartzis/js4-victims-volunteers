@@ -1,5 +1,8 @@
 $(document).on('ready', function() {
 
+    disableInput('forms-submit-Victim');
+    disableInput('forms-submit-Volunteer');
+
 });
 
 var createUserInput = function(userNumber, group, type) {
@@ -14,7 +17,8 @@ var createUserInput = function(userNumber, group, type) {
 var createUserForm = function(userNumber, group) {
     var wantedInput = ['Name', 'Phone-Number', 'Street'];
     var $userInfoForm = $("<form>", {
-        id: group + userNumber + "-info"
+        id: group + userNumber + "-info",
+        class: "user-info"
     });
     for (var i = 0; i < wantedInput.length; ++i) {
         $userInfoForm.append(createUserInput(userNumber, group, wantedInput[i]));
@@ -29,10 +33,64 @@ var createGroupForms = function(total, group) {
     for (var i = 1; i <= total; ++i) {
         $groupForms.append(createUserForm(i, group));
     }
+    // $groupForms.append($("<input>", {
+    //     type: 'button',
+    //     id: 'forms-submit-' + group,
+    //     value: 'Calculate'
+    // }));
     return $groupForms;
 }
 
-// $('#vic-total-submit').on
+var userInfo = function(name, phoneNumber, street) {
+    var userInfo = {};
+    userInfo['Name'] = name;
+    userInfo['Phone-Number'] = phoneNumber;
+    userInfo['Street'] = street;
+    return userInfo;
+}
 
+var disableInput = function(id) {
+    $('#' + id).prop('disabled', true);
+}
 
-// $('#vic-total-submit').mouseup(function(){$('#vic-info').append(createGroupForms($('#vic-total').val(),'victim'))})
+var undisableInput = function(id) {
+    $('#' + id).prop('disabled', false);
+}
+
+var Victims = {}
+var Volunteers = {}
+
+$('#vic-total-submit').mouseup(function() {
+    $('#vic-info').append(createGroupForms($('#vic-total').val(), 'Victim'));
+    // $('#vic-total-submit').prop('disabled', true);
+    // $('#vic-total').prop('disabled', true);
+    disableInput('vic-total-submit');
+    disableInput('vic-total');
+    undisableInput('forms-submit-Victim');
+
+});
+
+$('#vol-total-submit').mouseup(function() {
+    $('#vol-info').append(createGroupForms($('#vol-total').val(), 'Volunteer'));
+    // $('#vol-total-submit').prop('disabled', true);
+    // $('#vol-total').prop('disabled', true);
+    disableInput('vol-total-submit');
+    disableInput('vol-total');
+    undisableInput('forms-submit-Volunteer');
+});
+
+$('#forms-submit-Victim').mouseup(function() {
+    console.log('running victim calc');
+    for (var i = 1; i <= $('#vic-total').val(); ++i) {
+        Victims['Victim-' + i] = userInfo($('#Victim-' + i + '-Name').val(), $('#Victim-' + i + '-Phone-Number').val(), $('#Victim-' + i + '-Street').val());
+    }
+    disableInput('forms-submit-Victim');
+})
+
+$('#forms-submit-Volunteer').mouseup(function() {
+    console.log('running volunteer calc');
+    for (var i = 1; i <= $('#vol-total').val(); ++i) {
+        Volunteers['Volunteer-' + i] = userInfo($('#Volunteer-' + i + '-Name').val(), $('#Volunteer-' + i + '-Phone-Number').val(), $('#Volunteer-' + i + '-Street').val());
+    }
+    disableInput('forms-submit-Volunteer');
+})
