@@ -11,9 +11,13 @@
 }
 
 .body {
+	width: 100%;
+}
+.body-container {
 	width: 700px;
 	background-color: #aaa;
 	text-align: center;
+	margin: 0 auto;
 }
 
 .container-vic {
