@@ -33,11 +33,6 @@ var createGroupForms = function(total, group) {
     for (var i = 1; i <= total; ++i) {
         $groupForms.append(createUserForm(i, group));
     }
-    // $groupForms.append($("<input>", {
-    //     type: 'button',
-    //     id: 'forms-submit-' + group,
-    //     value: 'Calculate'
-    // }));
     return $groupForms;
 }
 
@@ -60,17 +55,34 @@ var undisableInput = function(id) {
 var Victims = {}
 var Volunteers = {}
 
-$('#vic-total-submit').mouseup(function() {
+var getInfo = function(person) {
+    var $userInfoDiv = $("<div>", {
+        class: "user-info"
+    });
+    for (key in person) {
+        $userInfoDiv.append('<p>' + person[key] + '</p>');
+    }
+    return $userInfoDiv;
+}
+
+var printInfo = function(allOfGroup) {
+    var $allInfoDiv = $("<div>");
+    for (key in allOfGroup) {
+        $allInfoDiv.append(getInfo(allOfGroup[key]));
+    }
+    return $allInfoDiv;
+}
+
+$('#vic-total-submit').on("click", function() {
     $('#vic-info').append(createGroupForms($('#vic-total').val(), 'Victim'));
     // $('#vic-total-submit').prop('disabled', true);
     // $('#vic-total').prop('disabled', true);
     disableInput('vic-total-submit');
     disableInput('vic-total');
     undisableInput('forms-submit-Victim');
-
 });
 
-$('#vol-total-submit').mouseup(function() {
+$('#vol-total-submit').on("click", function() {
     $('#vol-info').append(createGroupForms($('#vol-total').val(), 'Volunteer'));
     // $('#vol-total-submit').prop('disabled', true);
     // $('#vol-total').prop('disabled', true);
@@ -79,18 +91,20 @@ $('#vol-total-submit').mouseup(function() {
     undisableInput('forms-submit-Volunteer');
 });
 
-$('#forms-submit-Victim').mouseup(function() {
+$('#forms-submit-Victim').on("click", function() {
     console.log('running victim calc');
     for (var i = 1; i <= $('#vic-total').val(); ++i) {
         Victims['Victim-' + i] = userInfo($('#Victim-' + i + '-Name').val(), $('#Victim-' + i + '-Phone-Number').val(), $('#Victim-' + i + '-Street').val());
     }
     disableInput('forms-submit-Victim');
+    $('#vic-info-output').append(printInfo(Victims));
 })
 
-$('#forms-submit-Volunteer').mouseup(function() {
+$('#forms-submit-Volunteer').on("click", function() {
     console.log('running volunteer calc');
     for (var i = 1; i <= $('#vol-total').val(); ++i) {
         Volunteers['Volunteer-' + i] = userInfo($('#Volunteer-' + i + '-Name').val(), $('#Volunteer-' + i + '-Phone-Number').val(), $('#Volunteer-' + i + '-Street').val());
     }
     disableInput('forms-submit-Volunteer');
+    $('#vol-info-output').append(printInfo(Volunteers));
 })
