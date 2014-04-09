@@ -39,72 +39,72 @@ $(document).on('ready', function() {
         $('#vol-info-output').append(printInfo(Volunteers));
     })
 
+    var createUserInput = function(userNumber, group, type) {
+        var $inputName = $("<input>", {
+            type: 'text',
+            id: group + "-" + userNumber + "-" + type,
+            value: group + userNumber + " " + type
+        });
+        return $inputName;
+    }
+
+    var createUserForm = function(userNumber, group) {
+        var wantedInput = ['Name', 'Phone-Number', 'Street'];
+        var $userInfoForm = $("<form>", {
+            id: group + userNumber + "-info",
+            class: "user-info"
+        });
+        for (var i = 0; i < wantedInput.length; ++i) {
+            $userInfoForm.append(createUserInput(userNumber, group, wantedInput[i]));
+        }
+        return $userInfoForm;
+    }
+
+    var createGroupForms = function(total, group) {
+        var $groupForms = $("<div>", {
+            id: group + "-forms"
+        });
+        for (var i = 1; i <= total; ++i) {
+            $groupForms.append(createUserForm(i, group));
+        }
+        return $groupForms;
+    }
+
+    var userInfo = function(name, phoneNumber, street) {
+        var userInfo = {};
+        userInfo['Name'] = name;
+        userInfo['Phone-Number'] = phoneNumber;
+        userInfo['Street'] = street;
+        return userInfo;
+    }
+
+    var disableInput = function(id) {
+        $('#' + id).prop('disabled', true);
+    }
+
+    var undisableInput = function(id) {
+        $('#' + id).prop('disabled', false);
+    }
+
+    var Victims = {}
+    var Volunteers = {}
+
+    var getInfo = function(person) {
+        var $userInfoDiv = $("<div>", {
+            class: "user-info"
+        });
+        for (key in person) {
+            $userInfoDiv.append('<p>' + person[key] + '</p>');
+        }
+        return $userInfoDiv;
+    }
+
+    var printInfo = function(allOfGroup) {
+        var $allInfoDiv = $("<div>");
+        for (key in allOfGroup) {
+            $allInfoDiv.append(getInfo(allOfGroup[key]));
+        }
+        return $allInfoDiv;
+    }
+
 });
-
-var createUserInput = function(userNumber, group, type) {
-    var $inputName = $("<input>", {
-        type: 'text',
-        id: group + "-" + userNumber + "-" + type,
-        value: group + userNumber + " " + type
-    });
-    return $inputName;
-}
-
-var createUserForm = function(userNumber, group) {
-    var wantedInput = ['Name', 'Phone-Number', 'Street'];
-    var $userInfoForm = $("<form>", {
-        id: group + userNumber + "-info",
-        class: "user-info"
-    });
-    for (var i = 0; i < wantedInput.length; ++i) {
-        $userInfoForm.append(createUserInput(userNumber, group, wantedInput[i]));
-    }
-    return $userInfoForm;
-}
-
-var createGroupForms = function(total, group) {
-    var $groupForms = $("<div>", {
-        id: group + "-forms"
-    });
-    for (var i = 1; i <= total; ++i) {
-        $groupForms.append(createUserForm(i, group));
-    }
-    return $groupForms;
-}
-
-var userInfo = function(name, phoneNumber, street) {
-    var userInfo = {};
-    userInfo['Name'] = name;
-    userInfo['Phone-Number'] = phoneNumber;
-    userInfo['Street'] = street;
-    return userInfo;
-}
-
-var disableInput = function(id) {
-    $('#' + id).prop('disabled', true);
-}
-
-var undisableInput = function(id) {
-    $('#' + id).prop('disabled', false);
-}
-
-var Victims = {}
-var Volunteers = {}
-
-var getInfo = function(person) {
-    var $userInfoDiv = $("<div>", {
-        class: "user-info"
-    });
-    for (key in person) {
-        $userInfoDiv.append('<p>' + person[key] + '</p>');
-    }
-    return $userInfoDiv;
-}
-
-var printInfo = function(allOfGroup) {
-    var $allInfoDiv = $("<div>");
-    for (key in allOfGroup) {
-        $allInfoDiv.append(getInfo(allOfGroup[key]));
-    }
-    return $allInfoDiv;
-}
